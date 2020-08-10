@@ -219,12 +219,18 @@ function addImportsAndGenerationOptions(
         if (generationOptions.activeRecord) {
             entity.activeRecord = true;
         }
+        if (generationOptions.extendAbstractClass) {
+            entity.extendAbstractClass = generationOptions.extendAbstractClass;
+        }
         if (generationOptions.generateConstructor) {
             entity.generateConstructor = true;
         }
         if (generationOptions.exportAbstractClass) {
             entity.exportAbstractClass = true;
         }
+        entity.generateSuper = !!(
+            entity.activeRecord || entity.extendAbstractClass
+        );
     });
     return dbModel;
 }

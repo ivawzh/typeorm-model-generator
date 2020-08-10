@@ -451,6 +451,42 @@ describe("Model customization phase", async () => {
 
         compileGeneratedModel(generationOptions.resultsPath, [""]);
     });
+    it("extendAbstractClass", async () => {
+        const data = generateSampleData();
+        const generationOptions = generateGenerationOptions();
+        clearGenerationDir();
+
+        generationOptions.extendAbstractClass = '../../test/integration/examples/sample28-abstract-class-inheritance/BaseClass';
+        const customizedModel = modelCustomizationPhase(
+            data,
+            generationOptions,
+            {}
+        );
+        modelGenerationPhase(
+            getDefaultConnectionOptions(),
+            generationOptions,
+            customizedModel
+        );
+        const filesGenPath = path.resolve(resultsPath, "entities");
+        const postContent = fs
+            .readFileSync(path.resolve(filesGenPath, "Post.ts"))
+            .toString();
+        const postAuthorContent = fs
+            .readFileSync(path.resolve(filesGenPath, "PostAuthor.ts"))
+            .toString();
+        expect(postContent).to.have.string(
+            `export class Post extends BaseClass `
+        );
+        expect(postAuthorContent).to.have.string(
+            `export class PostAuthor extends BaseClass `
+        );
+        expect(postContent).to.have.string(
+            `import BaseClass from "../../test/integration/examples/sample28-abstract-class-inheritance/BaseClass"`
+        );
+        expect(postAuthorContent).to.have.string(
+            `import BaseClass from "../../test/integration/examples/sample28-abstract-class-inheritance/BaseClass"`
+        );
+    });
     it("exportAbstractClass", async () => {
         const data = generateSampleData();
         const generationOptions = generateGenerationOptions();
