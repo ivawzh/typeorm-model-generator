@@ -13,12 +13,16 @@ import {{localImport (toEntityName .)}} from './{{toFileName .}}'
 { name: "{{name}}", referencedColumnName: "{{toPropertyName referencedColumnName}}" },
 {{/inline}}
 {{#*inline "Relation"}}
+{{#unless skipRelationships}}
+
 @{{relationType}}(()=>{{toEntityName relatedTable}},{{toPropertyName relatedTable}}=>{{toPropertyName relatedTable}}.{{toPropertyName relatedField}}{{#if relationOptions}},{ {{json relationOptions}} }{{/if}})
 {{#if joinColumnOptions}}@JoinColumn([{{#joinColumnOptions}}{{> JoinColumnOptions}}{{/joinColumnOptions}}]){{/if}}
 {{#joinTableOptions}}@JoinTable({ name:"{{name}}", joinColumns:[{{#joinColumns}}{{> JoinColumnOptions}}{{/joinColumns}}],inverseJoinColumns:[{{#inverseJoinColumns}}{{> JoinColumnOptions}}{{/inverseJoinColumns}}],{{#database}}database:"{{.}}",{{/database}}{{#schema}}schema:"{{.}}"{{/schema}} }){{/joinTableOptions}}
 {{printPropertyVisibility}}{{toPropertyName fieldName}}{{strictMode}}:{{toRelation (toEntityName relatedTable) relationType}};
 
+{{/unless}}
 {{/inline}}
+
 {{#*inline "RelationId"}}
 @RelationId(({{toPropertyName entityName}}:{{toEntityName entityName}})=>{{toPropertyName entityName}}.{{toPropertyName relationField}})
 {{printPropertyVisibility}}{{toPropertyName fieldName}}{{strictMode}}:{{fieldType}};
@@ -33,7 +37,7 @@ import {{localImport (toEntityName .)}} from './{{toFileName .}}'
 {{#*inline "Entity"}}
 {{#indices}}{{> Index}}{{/indices~}}
 {{#unless exportAbstractClass}}@Entity("{{sqlName}}"{{#schema}} ,{schema:"{{.}}"{{#if ../database}}, database:"{{../database}}"{{/if}} } {{/schema}}){{/unless}}
-export{{#if defaultExport}} {{.}}{{/if}}{{#exportAbstractClass}} abstract{{/exportAbstractClass}} class {{toEntityName tscName}}{{#activeRecord}} extends BaseEntity{{/activeRecord}}{{#extendAbstractClass}} extends BaseClass{{/extendAbstractClass}} {
+export{{defaultExport}}{{#exportAbstractClass}} abstract{{/exportAbstractClass}} class {{toEntityName tscName}}{{#activeRecord}} extends BaseEntity{{/activeRecord}}{{#extendAbstractClass}} extends BaseClass{{/extendAbstractClass}} {
 
 {{#columns}}{{> Column}}{{/columns~}}
 {{#relations}}{{> Relation}}{{/relations~}}

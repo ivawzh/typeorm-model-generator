@@ -219,6 +219,9 @@ function addImportsAndGenerationOptions(
         if (generationOptions.activeRecord) {
             entity.activeRecord = true;
         }
+        if (generationOptions.skipRelationships) {
+            entity.skipRelationships = true;
+        }
         if (generationOptions.extendAbstractClass) {
             entity.extendAbstractClass = generationOptions.extendAbstractClass;
         }

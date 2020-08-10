@@ -16,6 +16,7 @@ export default interface IGenerationOptions {
     propertyVisibility: "public" | "protected" | "private" | "none";
     lazy: boolean;
     activeRecord: boolean;
+    skipRelationships: boolean;
     extendAbstractClass: string;
     generateConstructor: boolean;
     customNamingStrategyPath: string;
@@ -44,6 +45,7 @@ export function getDefaultGenerationOptions(): IGenerationOptions {
         propertyVisibility: "none",
         lazy: false,
         activeRecord: false,
+        skipRelationships: false,
         extendAbstractClass: "",
         generateConstructor: false,
         customNamingStrategyPath: "",

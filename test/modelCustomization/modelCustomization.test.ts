@@ -451,6 +451,42 @@ describe("Model customization phase", async () => {
 
         compileGeneratedModel(generationOptions.resultsPath, [""]);
     });
+    it("skipRelationships", async () => {
+        const data = generateSampleData();
+        const generationOptions = generateGenerationOptions();
+        clearGenerationDir();
+
+        generationOptions.skipRelationships = true;
+        const customizedModel = modelCustomizationPhase(
+            data,
+            generationOptions,
+            {}
+        );
+        modelGenerationPhase(
+            getDefaultConnectionOptions(),
+            generationOptions,
+            customizedModel
+        );
+        const filesGenPath = path.resolve(resultsPath, "entities");
+        const postContent = fs
+            .readFileSync(path.resolve(filesGenPath, "Post.ts"))
+            .toString();
+        const postAuthorContent = fs
+            .readFileSync(path.resolve(filesGenPath, "PostAuthor.ts"))
+            .toString();
+        expect(postContent).to.not.have.oneOf([
+            `@ManyToOne`,
+            `@OneToMany`,
+            `@JoinColumn`,
+        ]);
+        expect(postAuthorContent).to.not.have.oneOf([
+            `@ManyToOne`,
+            `@OneToMany`,
+            `@JoinColumn`,
+        ]);
+
+        compileGeneratedModel(generationOptions.resultsPath, [""]);
+    });
     it("extendAbstractClass", async () => {
         const data = generateSampleData();
         const generationOptions = generateGenerationOptions();

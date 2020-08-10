@@ -17,6 +17,7 @@ export type Entity = {
     // TODO: move to sub-object or use handlebars helpers(?)
     fileImports: string[];
     activeRecord?: true;
+    skipRelationships?: boolean;
     extendAbstractClass?: string;
     generateSuper?: boolean;
     generateConstructor?: true;
